@@ -3,7 +3,7 @@ using Microsoft.EntityFrameworkCore;
 
 namespace AuctionService.Data
 {
-	public class DbInitializer
+	public static class DbInitializer
 	{
 		public static void DbInit(WebApplication app)
 		{
