@@ -1,6 +1,7 @@
 using AuctionService.Consumers;
 using AuctionService.Data;
 using MassTransit;
+using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.EntityFrameworkCore;
 
 internal class Program
@@ -32,7 +33,7 @@ internal class Program
 
 			// Add Fault Consumer from Search Service
 			x.AddConsumersFromNamespaceContaining<AuctionCreatedFaultConsumer>();
-			
+
 			// Set Exchange endpoint to "auction-auction-created-fault"
 			x.SetEndpointNameFormatter(new KebabCaseEndpointNameFormatter("auction", false));
 
@@ -42,11 +43,20 @@ internal class Program
 			});
 		});
 
+		builder.Services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme)
+			.AddJwtBearer(options =>
+			{
+				options.Authority = builder.Configuration["IdentityServiceUrl"];
+				options.RequireHttpsMetadata = false;
+				options.TokenValidationParameters.ValidateAudience = false;
+				options.TokenValidationParameters.NameClaimType = "username";
+			});
+
 		var app = builder.Build();
 
 		// Configure the HTTP request pipeline.
+		app.UseAuthentication();
 		app.UseAuthorization();
-
 		app.MapControllers();
 
 		try
