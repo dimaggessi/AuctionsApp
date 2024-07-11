@@ -5,7 +5,7 @@ async function getData() {
   // fetch and cache the data
   // it's happening on Server Side, 
   // no information about the GatewayService will be displayed on browser's console.
-  const response = await fetch('http://localhost:6001/search?pageSize=10')
+  const response = await fetch('http://localhost:6001/search?pageSize=12')
 
   if (!response.ok) throw new Error('Failed to fetch data');
 
