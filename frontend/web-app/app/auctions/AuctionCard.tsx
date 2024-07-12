@@ -2,9 +2,10 @@ import Image from 'next/image'
 import React from 'react'
 import CountdownTimer from './CountdownTimer'
 import CarImage from './CarImage'
+import { Auction } from '@/types'
 
 type Props = {
-    auction: any
+    auction: Auction
 }
 
 // priority => attempt to load image soon as possible without lazy loading

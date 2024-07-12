@@ -1,6 +1,5 @@
 /** @type {import('next').NextConfig} */
 const nextConfig = {
-    
     // tells to accept images from cdn.pixabay.com
     images: {
         domains: [
