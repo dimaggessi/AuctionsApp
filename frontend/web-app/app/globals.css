@@ -12,7 +12,7 @@
         @apply sticky top-0 z-50 flex justify-between bg-white p-5 items-center text-gray-800 shadow-md
     }
     .icon-container {
-        @apply flex items-center gap-2 text-3xl font-semibold text-red-500
+        @apply cursor-pointer flex items-center gap-2 text-3xl font-semibold text-red-500
     }
     .auction-card-container {
         @apply w-full bg-gray-200 aspect-w-16 aspect-h-10 rounded-lg overflow-hidden
