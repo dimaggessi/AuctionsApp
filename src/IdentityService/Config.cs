@@ -45,7 +45,8 @@ public static class Config
 				AllowOfflineAccess = true,
 				// specify the scopes that's client is allowed to access
 				AllowedScopes = {"openid", "profile", "auctionApp"},
-				AccessTokenLifetime = 3600*24*30 // (one month lifetime) only for developing purpose
+				AccessTokenLifetime = 3600*24*30, // (one month lifetime) only for developing purpose
+				AlwaysIncludeUserClaimsInIdToken = true
 			}
 		};
 }
