@@ -1,6 +1,7 @@
 import type { Metadata } from "next";
 import Navbar from "./nav/Navbar";
 import './globals.css'
+import ToasterProvider from "./providers/ToasterProvider";
 
 export const metadata: Metadata = {
   title: "Auctions App",
@@ -15,6 +16,7 @@ export default function RootLayout({
   return (
     <html lang="en">
       <body>
+        <ToasterProvider />
         <Navbar />
         <main className='main-container'>
           {children}
