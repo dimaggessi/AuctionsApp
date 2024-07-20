@@ -1,3 +1,4 @@
+using AuctionService;
 using AuctionService.Consumers;
 using AuctionService.Data;
 using MassTransit;
@@ -57,6 +58,8 @@ internal class Program
 				options.TokenValidationParameters.ValidateAudience = false;
 				options.TokenValidationParameters.NameClaimType = "username";
 			});
+		
+		builder.Services.AddGrpc();
 
 		var app = builder.Build();
 
@@ -64,6 +67,7 @@ internal class Program
 		app.UseAuthentication();
 		app.UseAuthorization();
 		app.MapControllers();
+		app.MapGrpcService<GrpcAuctionService>();
 
 		try
 		{
