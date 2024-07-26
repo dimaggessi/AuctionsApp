@@ -107,8 +107,8 @@ services:
     environment:
       - ASPNETCORE_ENVIRONMENT=Docker
       - ASPNETCORE_URLS=http://+:80
-      - ClientApp=http://app.auctionsapp.com
-      - VIRTUAL_HOST=api.auctionsapp.com
+      - ClientApp=https://app.auctionsapp.com
+      - VIRTUAL_HOST=https://api.auctionsapp.com
     networks:
       custom:
   bid-svc:

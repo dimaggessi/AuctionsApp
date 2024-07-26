@@ -2,8 +2,9 @@
 @tailwind components;
 @tailwind utilities;
 
-@layer components {
+@import 'react-datepicker/dist/react-datepicker.css';
 
+@layer components {
 
     .main-container {
         @apply container mx-auto px-5 pt-10
