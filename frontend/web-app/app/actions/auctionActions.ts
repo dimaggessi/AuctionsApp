@@ -1,20 +1,9 @@
 'use server'
 
 import { Auction, Bid, PagedResult } from "@/types";
-import { fetchWrapper } from "@/lib/fetchWrapper";
+import { fetchWrapper } from "@/app/lib/fetchWrapper";
 import { FieldValues } from "react-hook-form";
 import { revalidatePath } from "next/cache";
-
-// export async function getData(query: string): Promise<PagedResult<Auction>> {
-//     // fetch and cache the data
-//     // it's happening on Server Side, 
-//     // no information about the GatewayService will be displayed on browser's console.
-//     const response = await fetch(`http://localhost:6001/search${query}`)
-
-//     if (!response.ok) throw new Error('Failed to fetch data');
-
-//     return response.json();
-//   }
 
 export async function getData(query: string): Promise<PagedResult<Auction>> {
   return await fetchWrapper.get(`search/${query}`);

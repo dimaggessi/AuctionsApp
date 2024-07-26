@@ -9,7 +9,7 @@ import { toast } from 'react-hot-toast'
 import BidItem from './BidItem'
 import EmptyFilter from '@/app/components/EmptyFilter'
 import { useBidStore } from '@/app/hooks/useBidStore'
-import { numberWithCommas } from '@/lib/numberWithComma'
+import { numberWithCommas } from '@/app/lib/numberWithComma'
 import BidForm from './BidForm'
 
 type Props = {

@@ -1,3 +1,9 @@
+networks:
+  custom:
+    ipam:
+      config:
+        - subnet: 10.5.0.0/16
+
 services:
   postgres:
     image: postgres
@@ -7,6 +13,8 @@ services:
       - 5432:5432
     volumes:
       - pgdata:/var/lib/postgresql/data
+    networks:
+      custom:
   mongodb:
     image: mongo
     environment:
@@ -16,11 +24,15 @@ services:
       - 27017:27017
     volumes:
       - mongodata:/var/lib/mongodb/data
+    networks:
+      custom:
   rabbitmq:
     image: rabbitmq:3-management-alpine
     ports:
       - 5672:5672
       - 15672:15672
+    networks:
+      custom:
   auction-svc:
     image: dimaggessi/auction-svc:latest
     build:
@@ -46,6 +58,8 @@ services:
     depends_on: 
       - postgres
       - rabbitmq
+    networks:
+      custom:
   search-svc:
     image: dimaggessi/search-svc:latest
     build:
@@ -65,6 +79,8 @@ services:
     depends_on: 
       - mongodb
       - rabbitmq
+    networks:
+      custom:
   identity-svc:
     image: dimaggessi/identity-svc:latest
     build:
@@ -73,15 +89,16 @@ services:
     environment:
       - ASPNETCORE_ENVIRONMENT=Docker
       - ASPNETCORE_URLS=http://+:80
+      - ClientApp=http://app.auctionsapp.com
       - RabbitMq__Host=rabbitmq
       - ConnectionStrings__DefaultConnection=Server=postgres:5432;User Id=postgres;Password=postgrespw;Database=identity
-    ports:
-      # 5000 external port that access this service (outside of Docker)
-      # internally is running on 80
-      - 5000:80
+      - VIRTUAL_HOST=id.auctionsapp.com
     # services which identity-svc depends on: (services which will start first)
     depends_on: 
       - postgres
+    networks:
+      custom:
+        ipv4_address: 10.5.0.200
   gateway-svc:
     image: dimaggessi/gateway-svc:latest
     build:
@@ -90,11 +107,10 @@ services:
     environment:
       - ASPNETCORE_ENVIRONMENT=Docker
       - ASPNETCORE_URLS=http://+:80
-      - RabbitMq__Host=rabbitmq
-    ports:
-      # 6001 external port that access this service (outside of Docker)
-      # internally is running on 80
-      - 6001:80
+      - ClientApp=http://app.auctionsapp.com
+      - VIRTUAL_HOST=api.auctionsapp.com
+    networks:
+      custom:
   bid-svc:
     image: dimaggessi/bid-svc:latest
     build:
@@ -112,6 +128,8 @@ services:
     depends_on: 
       - mongodb
       - rabbitmq
+    networks:
+      custom:
   notify-svc:
     image: dimaggessi/notify-svc:latest
     build:
@@ -125,6 +143,36 @@ services:
       - 7004:80
     depends_on:
       - rabbitmq
+    networks:
+      custom:
+  web-app:
+    image: dimaggessi/web-app
+    build:
+      context: .
+      dockerfile: frontend/web-app/Dockerfile
+    volumes:
+      - /var/lib/web/data
+    extra_hosts:
+      - id.auctionsapp.com:10.5.0.200 #address inside docker to identity-svc
+    environment:
+      - NEXTAUTH_SECRET=somethingreallyreallysecret
+      - NEXTAUTH_URL=http://app.auctionsapp.com
+      - NEXTAUTH_URL_INTERNAL=http://web-app:3000
+      - API_URL=http://gateway-svc/
+      - ID_URL=http://id.auctionsapp.com
+      - NEXT_PUBLIC_NOTIFY_URL=http://gateway-svc/notifications
+      - VIRTUAL_HOST=app.auctionsapp.com
+      - VIRTUAL_PORT=3000
+    networks:
+      custom:
+  nginx-proxy:
+    image: nginxproxy/nginx-proxy
+    ports:
+      - 80:80
+    networks:
+      custom:
+    volumes:
+      - /var/run/docker.sock:/tmp/docker.sock:ro
 volumes:
   pgdata:
   mongodata:

@@ -17,7 +17,7 @@ public static class Config
 			new ApiScope("auctionApp", "Auction app full access")
 		};
 
-	public static IEnumerable<Client> Clients =>
+	public static IEnumerable<Client> Clients(IConfiguration config) =>
 		new Client[]
 		{
 			// configuration just for a development
@@ -41,7 +41,7 @@ public static class Config
 				AllowedGrantTypes = GrantTypes.CodeAndClientCredentials,
 				// if using a mobile app, it's not possible store a secret inside a Reactive Native app
 				RequirePkce = false, // it's not needed for this case
-				RedirectUris = {"http://localhost:3000/api/auth/callback/id-server"},
+				RedirectUris = {config["ClientApp"] + "/api/auth/callback/id-server"},
 				AllowOfflineAccess = true,
 				// specify the scopes that's client is allowed to access
 				AllowedScopes = {"openid", "profile", "auctionApp"},
