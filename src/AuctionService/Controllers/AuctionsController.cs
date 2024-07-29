@@ -55,13 +55,13 @@ public class AuctionsController : ControllerBase
 		
 		var newAuction = _mapper.Map<AuctionDto>(auction);
 		
-		// publish a message to all service consumers
-		await _publishEndpoint.Publish(_mapper.Map<AuctionCreated>(newAuction));
-		
 		// all the code above will be part of the same transaction
 		var result = await _repository.SaveChangesAsync();
 		
 		if(!result) return BadRequest("Could not save changes to the Database");
+		
+		// publish a message to all service consumers
+		await _publishEndpoint.Publish(_mapper.Map<AuctionCreated>(newAuction));
 		
 		return CreatedAtAction(nameof(GetAuctionById), 
 			new {auction.Id}, newAuction);
@@ -84,9 +84,9 @@ public class AuctionsController : ControllerBase
 		auction.Item.Mileage = updateAuctionDto.Mileage ?? auction.Item.Mileage;
 		auction.Item.Year = updateAuctionDto.Year ?? auction.Item.Year;
 		
-		await _publishEndpoint.Publish(_mapper.Map<AuctionUpdated>(auction));
-		
 		var result = await _repository.SaveChangesAsync();
+		
+		await _publishEndpoint.Publish(_mapper.Map<AuctionUpdated>(auction));
 		
 		if(result) return Ok();
 		
@@ -105,9 +105,9 @@ public class AuctionsController : ControllerBase
 		
 		_repository.RemoveAuction(auction);
 		
-		await _publishEndpoint.Publish<AuctionDeleted>(new { Id = auction.Id.ToString() });
-		
 		var result = await _repository.SaveChangesAsync();
+		
+		await _publishEndpoint.Publish<AuctionDeleted>(new { Id = auction.Id.ToString() });
 		
 		if (!result) return BadRequest("Could not delete auction");
 		
