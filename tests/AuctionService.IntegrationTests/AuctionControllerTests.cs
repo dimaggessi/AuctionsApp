@@ -11,7 +11,9 @@ namespace AuctionService.IntegrationTests;
 // It's share the same instance of CustomWebAppFactory
 // therefore, same instance of Postgres and MassTransitTestHarness
 // among every test in this class
-public class AuctionControllerTests : IClassFixture<CustomWebAppFactory>, IAsyncLifetime
+
+[Collection("Shared collection")]
+public class AuctionControllerTests : IAsyncLifetime
 {
 	private readonly CustomWebAppFactory _customWebAppFactory;
 	private readonly HttpClient _httpClient;
