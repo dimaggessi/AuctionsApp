@@ -37,6 +37,13 @@ public class CustomWebAppFactory : WebApplicationFactory<Program>, IAsyncLifetim
 			services.AddMassTransitTestHarness();
 			
 			services.EnsureCreated<AuctionDbContext>();
+			
+			services.AddAuthentication(FakeJwtBearerDefaults.AuthenticationScheme)
+				.AddFakeJwtBearer(opt =>
+				
+				{
+					opt.BearerValueType = FakeJwtBearerBearerValueType.Jwt;
+				});
 		});
 	}
 
